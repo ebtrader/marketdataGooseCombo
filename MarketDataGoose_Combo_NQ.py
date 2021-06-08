@@ -31,7 +31,7 @@ from ibapi.order import *  # @UnusedWildImport
 
 # Create contract object
 eurusd_contract = Contract()
-eurusd_contract.symbol = 'ES'
+eurusd_contract.symbol = 'NQ'
 eurusd_contract.secType = 'FUT'
 eurusd_contract.exchange = 'GLOBEX'
 eurusd_contract.currency = 'USD'
@@ -109,7 +109,7 @@ class TestApp(EWrapper, EClient):
 
         try:
             connection = mysql.connector.connect(host='localhost',
-                                                 database='javeddb',
+                                                 database='nqdatabase',
                                                  user='root',
                                                  password='suite203',
                                                  auth_plugin='mysql_native_password')
@@ -309,7 +309,7 @@ def main():
         if args.global_cancel:
             app.globalCancelOnly = True
         # ! [connect]
-        app.connect("127.0.0.1", args.port, clientId=7)
+        app.connect("127.0.0.1", args.port, clientId=17)
         # ! [connect]
         print("serverVersion:%s connectionTime:%s" % (app.serverVersion(),
                                                       app.twsConnectionTime()))

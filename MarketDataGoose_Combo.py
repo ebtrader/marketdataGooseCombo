@@ -18,7 +18,7 @@ from ibapi.client import EClient
 from ibapi.utils import iswrapper
 
 from ibapi.contract import Contract
-from ContractSamples import ContractSamples
+
 
 from ibapi.ticktype import TickType, TickTypeEnum
 from ibapi import wrapper
@@ -28,8 +28,14 @@ from ibapi.utils import iswrapper
 # types
 from ibapi.common import *  # @UnusedWildImport
 from ibapi.order import *  # @UnusedWildImport
-from DBHelper import DBHelper
 
+# Create contract object
+eurusd_contract = Contract()
+eurusd_contract.symbol = 'ES'
+eurusd_contract.secType = 'FUT'
+eurusd_contract.exchange = 'GLOBEX'
+eurusd_contract.currency = 'USD'
+eurusd_contract.lastTradeDateOrContractMonth = "202106"
 
 def SetupLogger():
     if not os.path.exists("log"):
@@ -103,7 +109,7 @@ class TestApp(EWrapper, EClient):
 
         try:
             connection = mysql.connector.connect(host='localhost',
-                                                 database='nqdatabase',
+                                                 database='javeddb',
                                                  user='root',
                                                  password='suite203',
                                                  auth_plugin='mysql_native_password')
@@ -230,13 +236,8 @@ class TestApp(EWrapper, EClient):
 
     @printWhenExecuting
     def tickDataOperations_req(self):
-        # Create contract object
-        eurusd_contract = Contract()
-        eurusd_contract.symbol = 'NQ'
-        eurusd_contract.secType = 'FUT'
-        eurusd_contract.exchange = 'GLOBEX'
-        eurusd_contract.currency = 'USD'
-        eurusd_contract.lastTradeDateOrContractMonth = "202106"
+
+
 
         self.reqTickByTickData(19002, eurusd_contract, "AllLast", 0, False)
 
@@ -276,8 +277,8 @@ class TestApp(EWrapper, EClient):
     def persistData(self, reqId: int, time: int, price: float,
                           size: int, tickAttribLast: TickAttribLast):
         #print(" inside persistData")
-        contract = ContractSamples.SimpleFuture()
-        values = (1,contract.symbol, reqId, time, price, size)
+
+        values = (1,eurusd_contract.symbol, reqId, time, price, size)
         # db = DBHelper()
         self.insertData(values)
 
@@ -308,7 +309,7 @@ def main():
         if args.global_cancel:
             app.globalCancelOnly = True
         # ! [connect]
-        app.connect("127.0.0.1", args.port, clientId=5)
+        app.connect("127.0.0.1", args.port, clientId=7)
         # ! [connect]
         print("serverVersion:%s connectionTime:%s" % (app.serverVersion(),
                                                       app.twsConnectionTime()))
